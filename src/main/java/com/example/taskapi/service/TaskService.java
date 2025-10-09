@@ -3,17 +3,16 @@ package com.example.taskapi.service;
 import com.example.taskapi.exception.ResourceNotFoundException;
 import com.example.taskapi.model.Task;
 import com.example.taskapi.repository.TaskRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
-    private final TaskRepository repo;
 
-    public TaskService(TaskRepository repo) {
-        this.repo = repo;
-    }
+    private final TaskRepository repo;
 
     public Task create(Task task) {
         return repo.save(task);
@@ -24,7 +23,8 @@ public class TaskService {
     }
 
     public Task findById(Long id) {
-        return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task", "Task not found with id " + id));
     }
 
     public Task update(Long id, Task updated) {

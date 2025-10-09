@@ -2,8 +2,7 @@ package com.example.taskapi.controller;
 
 import com.example.taskapi.model.Task;
 import com.example.taskapi.service.TaskService;
-
-// import org.apache.commons.logging.Log;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,27 +11,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-// @Slf4j
+@RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService service;
 
-    public TaskController(TaskService service) {
-        this.service = service;
-    }
-
     // Create
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        // log.info(task.toString());
         Task created = service.create(task);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     // Get all
     @GetMapping
-    public List<Task> getAllTasks() {
-        return service.findAll();
+    public ResponseEntity<List<Task>> getAllTasks() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     // Get by id
