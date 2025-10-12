@@ -3,6 +3,8 @@ package com.example.taskapi.controller;
 import com.example.taskapi.model.Task;
 import com.example.taskapi.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
+@Slf4j
 public class TaskController {
 
     private final TaskService service;
@@ -19,6 +22,7 @@ public class TaskController {
     // Create
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        log.info(task.toString());
         Task created = service.create(task);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }

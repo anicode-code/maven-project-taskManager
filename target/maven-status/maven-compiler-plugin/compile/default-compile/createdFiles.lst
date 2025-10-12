@@ -1,5 +1,4 @@
 com\example\taskapi\model\Task.class
-com\example\taskapi\App.class
 com\example\taskapi\exception\ResourceNotFoundException.class
 com\example\taskapi\controller\TaskController.class
 com\example\taskapi\service\TaskService.class
