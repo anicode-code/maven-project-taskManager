@@ -31,15 +31,15 @@ class TaskServiceTest {
 
     @BeforeEach
     void setUp() {
-        task1 = new Task(1L, "T1", "Desc1", false);
-        task2 = new Task(2L, "T2", "Desc2", true);
+        task1 = new Task(1L, "T1", "Desc1", false, null);
+        task2 = new Task(2L, "T2", "Desc2", true, null);
     }
 
     @Test
     void create_shouldSaveAndReturnTask() {
         when(repo.save(any(Task.class))).thenReturn(task1);
 
-        Task input = new Task(null, "T1", "Desc1", false);
+        Task input = new Task(null, "T1", "Desc1", false, null);
         Task saved = service.create(input);
 
         assertThat(saved).isNotNull();
@@ -87,7 +87,7 @@ class TaskServiceTest {
         when(repo.findById(1L)).thenReturn(Optional.of(task1));
         when(repo.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Task updated = new Task(null, "Updated", "NewDesc", true);
+        Task updated = new Task(null, "Updated", "NewDesc", true, null);
         Task result = service.update(1L, updated);
 
         assertThat(result.getTitle()).isEqualTo("Updated");

@@ -27,7 +27,7 @@ class TaskServiceIntegrationTest {
     @Test
     void create_findAll_findById_update_and_delete() {
         // create
-        Task toCreate = new Task(null, "ServiceTest", "svc", false);
+        Task toCreate = new Task(null, "ServiceTest", "svc", false, null);
         Task created = service.create(toCreate);
 
         assertThat(created.getId()).isNotNull();

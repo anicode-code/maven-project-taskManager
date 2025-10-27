@@ -20,7 +20,7 @@ class TaskRepositoryIntegrationTest {
 
     @Test
     void saveAndFindById_andDelete_shouldWork() {
-        Task t = new Task(null, "RepoTest", "from repo", false);
+        Task t = new Task(null, "RepoTest", "from repo", false, null);
         Task saved = repository.save(t);
 
         assertThat(saved.getId()).isNotNull();

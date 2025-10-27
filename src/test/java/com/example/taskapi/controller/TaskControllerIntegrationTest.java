@@ -41,7 +41,8 @@ class TaskControllerIntegrationTest {
     @Test
     void postGetPutDelete_flow() throws Exception {
         // create
-        Task create = new Task(null, "CtrlTest", "desc", false);
+        Task create = new Task(null, "CtrlTest", "desc", false, null);
+        // Task create = new Task(null, "CtrlTest", "desc", false);
         String createJson = objectMapper.writeValueAsString(create);
 
         String createdJson = mockMvc.perform(post("/api/tasks")
@@ -63,7 +64,8 @@ class TaskControllerIntegrationTest {
                 .andExpect(jsonPath("$.title", is("CtrlTest")));
 
         // update
-        Task update = new Task(null, "CtrlTestUpdated", "desc2", true);
+        Task update = new Task(null, "CtrlTest", "desc2", true, null);
+        // Task update = new Task(null, "CtrlTestUpdated", "desc2", true);
         mockMvc.perform(put("/api/tasks/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(update)))

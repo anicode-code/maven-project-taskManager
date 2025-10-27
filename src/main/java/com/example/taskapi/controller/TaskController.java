@@ -3,10 +3,8 @@ package com.example.taskapi.controller;
 import com.example.taskapi.model.Task;
 import com.example.taskapi.service.TaskService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,43 +12,42 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
-@Slf4j
 public class TaskController {
 
     private final TaskService service;
 
-    // Create
-    @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        log.info(task.toString());
-        Task created = service.create(task);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
-    }
-
-    // Get all
+    // List tasks for authenticated user
     @GetMapping
-    public ResponseEntity<List<Task>> getAllTasks() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<Task>> getTasks(Authentication auth) {
+        String username = auth.getName();
+        return ResponseEntity.ok(service.findAllForUsername(username));
     }
 
-    // Get by id
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        Task task = service.findById(id);
-        return ResponseEntity.ok(task);
+    public ResponseEntity<Task> getTask(@PathVariable Long id, Authentication auth) {
+        String username = auth.getName();
+        Task t = service.findByIdAndUsername(id, username);
+        return ResponseEntity.ok(t);
     }
 
-    // Update
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody Task task, Authentication auth) {
+        String username = auth.getName();
+        Task created = service.createForUsername(username, task);
+        return ResponseEntity.status(201).body(created);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        Task updated = service.update(id, task);
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task, Authentication auth) {
+        String username = auth.getName();
+        Task updated = service.updateForUsername(id, username, task);
         return ResponseEntity.ok(updated);
     }
 
-    // Delete
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        service.delete(id);
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id, Authentication auth) {
+        String username = auth.getName();
+        service.deleteForUsername(id, username);
         return ResponseEntity.noContent().build();
     }
 }

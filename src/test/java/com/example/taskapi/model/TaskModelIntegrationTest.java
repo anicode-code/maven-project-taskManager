@@ -9,7 +9,7 @@ class TaskModelIntegrationTest {
     @Test
     void lombok_shouldGenerateGettersSettersAndConstructors() {
         // Using AllArgsConstructor (id,title,desc,completed)
-        Task t = new Task(10L, "Test", "desc", false);
+        Task t = new Task(10L, "Test", "desc", false, null);
 
         // Verify getters
         assertThat(t.getId()).isEqualTo(10L);
@@ -25,7 +25,7 @@ class TaskModelIntegrationTest {
         assertThat(t.isCompleted()).isTrue();
 
         // equals/hashCode: create equal object
-        Task t2 = new Task(10L, "Modified", "desc", true);
+        Task t2 = new Task(10L, "Modified", "desc", true, null);
         assertThat(t).isEqualTo(t2);
         assertThat(t.hashCode()).isEqualTo(t2.hashCode());
     }

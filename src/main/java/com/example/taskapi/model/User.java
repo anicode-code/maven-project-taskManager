@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +18,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    // NOTE: storing as plain text here for demo/tests only. Use hashing in real apps.
     @Column(nullable = false)
-    private String password;
+    private String password; // stored as bcrypt hash
 }
