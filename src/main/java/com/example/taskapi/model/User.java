@@ -1,13 +1,12 @@
 package com.example.taskapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -19,5 +18,5 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // stored as bcrypt hash
+    private String password; // bcrypt hash
 }

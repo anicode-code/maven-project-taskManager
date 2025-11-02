@@ -14,37 +14,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TaskService {
 
-    private final TaskRepository repo;
+    private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
-    public List<Task> findAllForUsername(String username) {
-        return repo.findByUserUsername(username);
+    public List<Task> getAllTasksForUser(String username) {
+        User user = findUser(username);
+        return taskRepository.findByUser(user);
     }
 
-    public Task findByIdAndUsername(Long id, String username) {
-        return repo.findById(id)
-                .filter(t -> t.getUser() != null && username.equals(t.getUser().getUsername()))
-                .orElseThrow(() -> new ResourceNotFoundException("Task not found for user"));
+    public Task getTaskById(String username, Long id) {
+        User user = findUser(username);
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Task not found or not authorized");
+        }
+        return task;
     }
 
-    public Task createForUsername(String username, Task t) {
-        User user = userRepository.findByUsername(username)
+    public Task createTask(String username, Task task) {
+        User user = findUser(username);
+        task.setId(null);
+        task.setUser(user);
+        return taskRepository.save(task);
+    }
+
+    public Task updateTask(String username, Long id, Task updated) {
+        Task task = getTaskById(username, id); // already checks ownership
+
+        task.setTitle(updated.getTitle());
+        task.setDescription(updated.getDescription());
+        task.setCompleted(updated.isCompleted());
+
+        return taskRepository.save(task);
+    }
+
+    public void deleteTask(String username, Long id) {
+        Task task = getTaskById(username, id); // already checks ownership
+        taskRepository.delete(task);
+    }
+
+    private User findUser(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        t.setId(null);
-        t.setUser(user);
-        return repo.save(t);
-    }
-
-    public Task updateForUsername(Long id, String username, Task updated) {
-        Task t = findByIdAndUsername(id, username);
-        t.setTitle(updated.getTitle());
-        t.setDescription(updated.getDescription());
-        t.setCompleted(updated.isCompleted());
-        return repo.save(t);
-    }
-
-    public void deleteForUsername(Long id, String username) {
-        Task t = findByIdAndUsername(id, username);
-        repo.delete(t);
     }
 }
